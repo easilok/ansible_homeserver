@@ -1,0 +1,7 @@
+---
+container_name: docker-registry
+
+dashboard_url: "http://registry.{{ host_local }}"
+# dashboard_url: "https://docker.luispereira.xyz"
+
+homer_category: project

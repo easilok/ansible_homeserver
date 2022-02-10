@@ -1,0 +1,78 @@
+---
+- name: Include OS-specific variables
+  include_vars: "{{ ansible_facts['os_family'] }}.yml"
+
+- name: Install deluge and deluge-web
+  package:
+    name: 
+      - deluged
+      - deluge-web
+      - deluge-console
+    state: present
+
+- name: Make sure deluge user exists
+  getent: 
+    database: passwd 
+    key: "{{ deluge_user }}"
+    fail_key: True
+
+- name: Make sure deluge group exists
+  getent: 
+    database: group 
+    key: "{{ deluge_group }}"
+    fail_key: True
+
+- name: Install deluge-daemon service file
+  template:
+    src: "deluge-daemon.service.j2"
+    dest: "/etc/systemd/system/deluge-daemon.service"
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Install deluge-web service file
+  template:
+    src: "deluge-web.service.j2"
+    dest: "/etc/systemd/system/deluge-web.service"
+    mode: 0644
+    owner: root
+    group: root
+
+# - name: Install deluged config file
+#   copy:
+#     src: "files/deluged"
+#     dest: "/etc/default/deluged"
+#     mode: 0644
+#     owner: root
+#     group: root
+  # notify:
+  #   - Restard deluge
+
+- name: Make sure the deluged package systemd service is disabled and stopped
+  service:
+    name: deluged
+    state: stopped
+    enabled: no
+
+- name: Make sure the deluge-daemon systemd service is enabled and started
+  service:
+    name: deluge-daemon
+    state: started
+    enabled: yes
+
+- name: Make sure the deluge-web systemd service is enabled and started
+  service:
+    name: deluge-web
+    state: started
+    enabled: yes
+
+- name: Append the debian-deluged group
+  user:
+    name: "{{ username }}"
+    groups: 
+      - "{{ deluge_group }}"
+    append: true
+
+- name: "Set {{ container_name }} nginx configuration"
+  include_tasks: nginx_vhost.yml
+  when: enable_nginx | default(False)

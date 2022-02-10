@@ -1,0 +1,240 @@
+---
+#
+# Tasks and roles for all hosts
+#
+# - hosts: kinemon
+#   gather_facts: no
+
+#   pre_tasks:
+#     - import_tasks: tasks/ssh_juggle_port.yml
+#       tags:
+#         - port
+
+- hosts: kinemon
+  become: yes
+  roles:
+
+    #
+    # Basics
+    #
+    - role: system
+      tags:
+        - system
+
+    - role: docker
+      tags:
+        - docker
+
+    - role: chriswayg.msmtp-mailer
+      tags:
+        - msmtp
+
+
+    #
+    # Security
+    #
+    - role: security/fail2ban
+      tags:
+      - fail2ban
+
+    - role: security/iptables
+      tags:
+      - iptables
+      when: enable_iptables
+
+    # Auditing community service
+    # - role: security/crowdsec
+    #   tags:
+    #   - crowdsec
+    #   when: enable_crowdsec | default(False)
+
+    # ssh standard port responder
+    # - role: security/endlessh
+    #   tags:
+    #   - endlessh
+    #   when: enable_endlessh | default(False)
+
+    - role: geerlingguy.security
+      tags:
+        - security
+
+    #
+    # Network
+    #
+    
+    - role: network/bridge
+      become: yes
+      when: enable_net_bridge | default(False)
+      tags:
+        - bridge
+
+    ## - role: network/ddclient
+    ##   become: yes
+    ##   when: enable_ddclient | default(False)
+    ##   tags:
+    ##     - ddclient
+
+    - role: network/nginx
+      become: yes
+      when: enable_nginx | default(False)
+      tags:
+        - nginx
+
+    ##
+    ## Filesystems
+    ##
+
+    #
+    # Homer
+    #
+    - role: homer
+      become: no
+      tags:
+        - homer
+        - containers
+      when: enable_homer | default(False)
+
+    #
+    # Services
+    #
+    - role: containers/system/jackett
+      become: no
+      tags:
+        - jackett
+        - containers
+      when: enable_jackett | default(False)
+
+    ## Authentication for network access
+    ## - role: containers/system/authelia
+    ##   become: no
+    ##   tags:
+    ##     - authelia
+    ##     - containers
+    ##   when: enable_authelia | default(False)
+
+    ## Auto updated containers
+    ## - role: containers/system/watchtower
+    ##   become: no
+    ##   tags:
+    ##     - watchtower
+    ##     - containers
+
+    #
+    # Media
+    #
+    - role: deluge
+      become: yes
+      tags:
+        - deluge
+      when: enable_deluge | default(False)
+
+    - role: containers/media/sonarr
+      become: no
+      tags:
+        - sonarr
+        - containers
+      when: enable_sonarr | default(False)
+
+    # - role: containers/media/radarr
+    #   become: no
+    #   tags:
+    #     - radarr
+    #     - containers
+    #   when: enable_radarr | deault(False)
+
+    - role: containers/media/jellyfin
+      become: no
+      tags:
+        - jellyfin
+        - containers
+      when: enable_jellyfin | default(False)
+
+    #- role: containers/media/openbooks
+    #  become: no
+    #  tags:
+    #    - openbooks
+    #    - containers
+    #  when: enable_openbooks | default(False)
+
+    - role: minidlna
+      become: yes
+      tags:
+        - minidlna
+      when: enable_minidlna | default(False)
+
+    #
+    # Services
+    #
+    #- role: containers/services/photoprism
+    #  become: no
+    #  tags:
+    #    - photoprism
+    #    - containers
+    #  when: enable_photoprism | default(False)
+
+    - role: containers/services/registry
+      become: no
+      tags: 
+        - containers
+        - services
+      when: enable_registry | default(False)
+
+    ## - role: containers/services/nextcloud
+    ##   become: no
+    ##   tags:
+    ##     - nextcloud
+    ##     - containers
+    ##   when: enable_nextcloud | default(False)
+
+    ##
+    ## Home automation
+    ##
+    ## - role: containers/homeautomation/homeassistant
+    ##   become: no
+    ##   tags:
+    ##     - homeassistant
+    ##     - smarthome
+    ##     - containers
+    ##   when: enable_homeassistant | default(False)
+
+    #
+    # Project
+    #
+    - role: containers/project/kanboard
+      become: no
+      tags: 
+        - containers
+        - project
+      when: enable_kanboard | default(False)
+
+    - role: containers/project/wekan
+      become: no
+      tags: 
+        - containers
+        - project
+      when: enable_wekan | default(False)
+
+    - role: containers/project/gitea
+      become: no
+      tags: 
+        - containers
+        - project
+      when: enable_gitea | default(False)
+
+    #
+    # System
+    #
+    - role: containers/system/portainer
+      become: no
+      tags:
+        - containers
+      when: enable_portainer | default(False)
+
+    ##
+    ## Samba
+    ##
+    #- role: bertvv.samba
+    #  become: yes
+    #  tags:
+    #    - samba
+    #  when: enable_nas_stuff | default(False)

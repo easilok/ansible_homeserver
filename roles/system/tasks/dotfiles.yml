@@ -1,0 +1,9 @@
+---
+- name: Clone the latest dotfiles repo
+  become: no
+  git:
+    repo: "{{ dotfiles_repo }}"
+    dest: "/home/{{ username }}/git/dotfiles"
+    recursive: no
+    force: yes
+

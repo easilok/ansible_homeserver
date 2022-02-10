@@ -1,0 +1,30 @@
+---
+- name: Make sure the {{ container_name }} container is created and running
+  docker_container:
+    name: "{{ container_name }}"
+    image: "ghcr.io/linuxserver/jellyfin"
+    pull: yes
+    labels:
+      "flame.type": "application"
+      "flame.name": "{{ container_name | title }}"
+      "flame.url": "{{ dashboard_url }}"
+      "flame.icon": "custom"
+    state: 'started'
+    env:
+      "PUID": "{{ guid }}"
+      "PGID": "{{ guid }}"
+      "TZ": "{{ timezone }}"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "{{ docker_dir }}/{{ container_name }}/config:/config"
+      - "{{ docker_dir }}/{{ container_name }}/series:/data/tvshows"
+      - "{{ docker_dir }}/{{ container_name }}/movies:/data/movies"
+      - "{{ docker_dir }}/{{ container_name }}/music:/data/music"
+      - "{{ docker_dir }}/{{ container_name }}/media:/data/media"
+    restart_policy: unless-stopped
+    ports:
+      - 8096:8096
+      - 8920:8920 #optional
+      - 7359:7359/udp #optional
+      # - 1900:1900/udp #optional - DLNA not working, using minidlna
+

@@ -1,0 +1,57 @@
+---
+- name: Create {{ container_name }} network.
+  docker_network:
+    name: '{{ container_name }}_default'
+
+- name: Make sure the {{ container_name }} container is created and running
+  docker_container:
+    name: "{{ container_name }}"
+    image: "kanboard/kanboard:latest"
+    pull: yes
+    labels:
+      "flame.type": "application"
+      "flame.name": "{{ container_name | title }}"
+      "flame.url": "{{ dashboard_url }}"
+      "flame.icon": "custom"
+    state: 'started'
+    env:
+      "PUID": "{{ guid }}"
+      "PGID": "{{ guid }}"
+      "TZ": "{{ timezone }}"
+      "DATABASE_URL": "mysql://{{ db_container_user }}:{{ db_container_password }}@{{ container_name }}-db/{{ db_container_database }}"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "{{ docker_dir }}/{{ container_name }}/data:/var/www/app/data"
+      - "{{ docker_dir }}/{{ container_name }}/plugins:/var/www/app/plugins"
+      - "{{ docker_dir }}/{{ container_name }}/ssl:/etc/nginx/ssl"
+    restart_policy: unless-stopped
+    ports:
+      - 8083:80
+      - 4443:443 
+    networks:
+      - name: "{{ container_name }}_default"
+
+- name: Make sure the {{ container_name }} database container is created and running
+  docker_container:
+    name: "{{ container_name }}-db"
+    image: mariadb:latest
+    pull: yes
+    command: "--default-authentication-plugin=mysql_native_password"
+    env:
+      "MYSQL_ROOT_PASSWORD": "{{ db_container_root_password }}"
+      "MYSQL_DATABASE": "{{ db_container_database }}"
+      "MYSQL_USER": "{{ db_container_user }}"
+      "MYSQL_PASSWORD": "{{ db_container_password }}"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "{{ docker_dir }}/{{ container_name }}/db:/var/lib/mysql"
+    networks:
+      - name: "{{ container_name }}_default"
+
+# - name: Add {{ container_name }} to the SWAG network (reverse-proxy)
+#   docker_network:
+#     name: swag_internal_network
+#     connected:
+#       - "{{ container_name }}"
+#     appends: yes
+#   when: enable_swag

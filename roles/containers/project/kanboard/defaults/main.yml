@@ -1,0 +1,11 @@
+---
+container_name: kanboard
+
+db_container_root_password: "secret"
+db_container_database: "kanboard"
+db_container_user: "kanboard"
+db_container_password: "kanboard-secret"
+
+dashboard_url: "http://kanboard.{{ host_local }}"
+
+homer_category: project

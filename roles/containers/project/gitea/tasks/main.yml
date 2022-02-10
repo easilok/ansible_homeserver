@@ -1,0 +1,71 @@
+---
+- name: Handle {{ container_name }} persistent data
+  become: no
+  when: "enable_nas_stuff | default(False)"
+  block:
+  - name: Check if the {{ container_name }} data exists 
+    stat:
+      path: "{{ docker_dir }}/{{ container_name }}"
+    register: container_data
+  - name: Check if the {{ container_name }} backup data exists 
+    stat:
+      path: "{{ backups_folder }}/docker/{{ container_name }}"
+    register: container_backup
+    when: "enable_nas_stuff | default(False)"
+  - name: Restore the "{{ container_name }}" backup folder from 
+    become: yes
+    synchronize:
+      src: "{{ backups_folder }}/docker/{{ container_name }}"
+      dest: "{{ docker_dir }}/{{ container_name }}"
+      delete: true
+      # rsync_opts:
+      #   - "--exclude=.git"
+      # recursive: yes
+    delegate_to: "{{ inventory_hostname }}"
+    when: not container_data.stat.exists and container_backup.stat.exists
+
+  - name: Chmod the data folder
+    become: yes
+    file:
+      dest: "{{ docker_dir }}/{{ container_name }}"
+      state: directory
+      owner: "{{ username }}"
+      group: "{{ username }}"
+      recurse: yes
+
+- name: Create {{ container_name }} network.
+  docker_network:
+    name: '{{ container_name }}'
+
+- name: Make sure the {{ container_name }} container is created and running
+  docker_container:
+    name: "{{ container_name }}"
+    image: "gitea/gitea:1.15.4"
+    pull: yes
+    labels:
+      "flame.type": "application"
+      "flame.name": "{{ container_name | title }}"
+      "flame.url": "{{ dashboard_url }}"
+      "flame.icon": "custom"
+    state: 'started'
+    env:
+      "USER_UID": "{{ guid }}"
+      "USER_GID": "{{ guid }}"
+      "TZ": "{{ timezone }}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "{{ docker_dir }}/{{ container_name }}/volume:/data"
+    restart_policy: unless-stopped
+    ports:
+      - "8300:3000"
+      - "8222:22"
+    networks:
+      - name: "{{ container_name }}"
+
+# - name: Add {{ container_name }} to the SWAG network (reverse-proxy)
+#   docker_network:
+#     name: swag_internal_network
+#     connected:
+#       - "{{ container_name }}"
+#     appends: yes
+#   when: enable_swag

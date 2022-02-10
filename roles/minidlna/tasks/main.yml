@@ -1,0 +1,22 @@
+- name: Install minidlna 
+  package:
+    name: 
+      - minidlna
+    state: present
+
+- name: Install minidlna config file
+  template:
+    src: "minidlna.conf.j2"
+    dest: "/etc/minidlna.conf"
+    mode: 0644
+    owner: root
+    group: root
+  notify:
+    - Restart minidlna
+
+- name: Make sure the minidlna systemd service is enabled and started
+  service:
+    name: minidlna
+    state: started
+    enabled: yes
+

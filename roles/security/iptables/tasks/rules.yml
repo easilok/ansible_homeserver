@@ -1,0 +1,90 @@
+- name: Allow loopback connection
+  iptables:
+    chain: INPUT
+    in_interface: lo
+    comment: Ansible managed
+    jump: ACCEPT
+
+- name: Allow established and related connections
+  iptables:
+    chain: INPUT
+    match: conntrack
+    ctstate: ESTABLISHED,RELATED
+    comment: Ansible managed
+    jump: ACCEPT
+
+- name: Log port scans
+  iptables:
+    chain: INPUT
+    match: conntrack
+    ctstate: NEW
+    comment: Ansible managed
+    jump: LOG
+  when: enable_crowdsec | default(False)
+
+- name: Allow SSH
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: "{{ security_ssh_port }}"
+    ctstate: NEW,ESTABLISHED
+    jump: ACCEPT
+    comment: Ansible managed
+
+- name: Allow endlessh
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: 22
+    ctstate: NEW,ESTABLISHED
+    jump: ACCEPT
+    comment: Ansible managed
+  when: enable_endlessh | default(False)
+
+- name: Allow HTTP and HTTPS
+  ansible.builtin.iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_ports:
+      - "80"
+      - "443"
+    jump: ACCEPT
+    comment: Ansible managed
+  # when: (enable_bunkerized_nginx | default(False)) or (enable_swag | default(False))
+
+- name: Allow Wireguard
+  iptables:
+    chain: INPUT
+    protocol: udp
+    destination_port: 51820
+    jump: ACCEPT
+    comment: Ansible managed
+  when: enable_wireguard | default(False)
+
+- name: Allow deluge-web
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: 8112
+    jump: ACCEPT
+    comment: Ansible managed
+  when: enable_deluge | default(False)
+
+- name: Allow minidlna web
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: 8200
+    jump: ACCEPT
+    comment: Ansible managed
+  when: enable_minidlna | default(False)
+
+- name: Allow minidlna
+  iptables:
+    chain: INPUT
+    protocol: udp
+    destination_port: 1900
+    jump: ACCEPT
+    comment: Ansible managed
+  when: enable_minidlna | default(False)
+

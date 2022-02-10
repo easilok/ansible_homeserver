@@ -1,0 +1,6 @@
+---
+container_name: wekan
+
+dashboard_url: "http://wekan.{{ host_local }}"
+
+homer_category: project

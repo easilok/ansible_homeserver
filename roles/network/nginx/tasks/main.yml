@@ -1,0 +1,12 @@
+- name: Make sure nginx is installed
+  package:
+    name: 
+      - nginx
+    state: present
+
+- name: Make sure nginx is started 
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+

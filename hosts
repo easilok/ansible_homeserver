@@ -1,0 +1,16 @@
+[raspberies]
+pi-hole ansible_host=192.168.1.230
+tesla ansible_host=192.168.1.240
+
+[raspberies:vars]
+ansible_user=pi
+ansible_python_interpreter=/usr/bin/python3
+
+[arch]
+homedesktop ansible_host=192.168.1.220
+
+[vm]
+homeassistant ansible_host=192.168.1.181
+
+[homeserver]
+kinemon ansible_host=192.168.1.157 ansible_port=69 ansible_user=luis ansible_private_key_file=$HOME/.ssh/id_rsa

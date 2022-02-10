@@ -1,0 +1,19 @@
+---
+docker_deps:
+  - 'ca-certificates'
+  - 'curl'
+  - 'gnupg'
+  - 'lsb-release'
+  - 'python3-jsondiff'
+  # - 'apt-transport-https'
+  # - 'software-properties-common'
+  # - 'python3-pip'
+  # - 'virtualenv'
+  # - 'python3-setuptools'
+  # - 'docker-compose'
+
+docker_packages:
+  - 'docker-ce'
+  - 'docker-ce-cli'
+  - 'containerd.io'
+  - 'docker-compose'

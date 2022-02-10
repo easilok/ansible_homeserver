@@ -1,0 +1,55 @@
+- name: Check systemd network folder
+  become: yes
+  block:
+    - name: Check systemd network folder exists
+      stat:
+        path: "/etc/systemd/network"
+      register: systemd_network_folder
+      when: "enable_net_bridge | default(False)"
+
+    - name: Create systemd network folder
+      file:
+        dest: "/etc/systemd/network"
+        state: directory
+        owner: root
+        group: root
+        mode: 0644
+      when: not systemd_network_folder.stat.exists
+
+- name: Install systemd network files
+  become: yes
+  block:
+  - name: Install systemd network bridge netdev
+    template:
+      src: "br.netdev.j2"
+      dest: "/etc/systemd/network/br.netdev"
+      mode: 0644
+      owner: root
+      group: root
+    when: "enable_net_bridge | default(False)"
+
+  - name: Install systemd network bridge bind
+    template:
+      src: "1-br0-bind.network.j2"
+      dest: "/etc/systemd/network/1-br0-bind.network"
+      mode: 0644
+      owner: root
+      group: root
+    when: "enable_net_bridge | default(False)"
+
+  - name: Install systemd network bridge dhcp
+    template:
+      src: "2-br0-dhcp.network.j2"
+      dest: "/etc/systemd/network/2-br0-dhcp.network"
+      mode: 0644
+      owner: root
+      group: root
+    # notify:
+    #   - Restart systemd-networkd
+    when: "enable_net_bridge | default(False)"
+
+- name: Ensures systemd-networkd is enable
+  service:
+    name: systemd-networkd
+    state: started
+    enabled: yes

@@ -1,0 +1,8 @@
+---
+container_name: deluge
+
+dashboard_url: "http://deluge.{{ host_local }}"
+
+nginx_server_name: "deluge.{{ host_local }}"
+
+homer_category: system

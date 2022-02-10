@@ -1,0 +1,32 @@
+- name: Check if the nginx folder exists 
+  become: yes
+  stat:
+    path: "/etc/nginx/sites-available"
+  register: nginx_data
+
+- name: Fail if nginx not installed
+  fail: 
+    msg: "nginx data folder not present"
+  when: not nginx_data.stat.exists
+
+- name: Install {{ container_name }} virtual host configuration
+  become: yes
+  template:
+    src: "nginx_vhost.conf.j2"
+    dest: "/etc/nginx/sites-available/{{ container_name }}.conf"
+    mode: 0644
+    owner: root
+    group: root
+    force: yes
+- name: Enable {{ container_name }} virtual host
+  become: yes
+  file:
+    src: "/etc/nginx/sites-available/{{ container_name }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ container_name }}.conf"
+    owner: root
+    group: root
+    state: link
+    force: yes
+  notify:
+    - Restart nginx
+
