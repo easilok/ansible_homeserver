@@ -8,4 +8,6 @@ db_container_password: "kanboard-secret"
 
 dashboard_url: "http://kanboard.{{ host_local }}"
 
+nginx_server_name: "kanboard.{{ host_local }}"
+
 homer_category: project

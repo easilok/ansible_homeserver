@@ -3,3 +3,7 @@
 # - include_tasks: xresources.yml
 - include_tasks: assets.yml
 - include_tasks: docker.yml
+
+- name: "Set {{ container_name }} nginx configuration"
+  include_tasks: "{{ playbook_dir }}/tasks/nginx_vhost.yml"
+  when: enable_nginx | default(False)

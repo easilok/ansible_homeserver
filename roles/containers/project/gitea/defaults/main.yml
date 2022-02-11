@@ -3,4 +3,6 @@ container_name: gitea
 
 dashboard_url: "http://gitea.{{ host_local }}"
 
+nginx_server_name: "gitea.{{ host_local }}"
+
 homer_category: project

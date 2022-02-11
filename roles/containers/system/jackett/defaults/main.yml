@@ -3,4 +3,6 @@ container_name: jackett
 
 dashboard_url: "http://jackett.{{ host_local }}"
 
+nginx_server_name: "jackett.{{ host_local }}"
+
 homer_category: media

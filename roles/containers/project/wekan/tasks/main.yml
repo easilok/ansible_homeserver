@@ -1,38 +1,4 @@
 ---
-- name: Handle {{ container_name }} persistent data
-  become: no
-  when: "enable_nas_stuff | default(False)"
-  block:
-  - name: Check if the {{ container_name }} data exists 
-    stat:
-      path: "{{ docker_dir }}/{{ container_name }}"
-    register: container_data
-  - name: Check if the {{ container_name }} backup data exists 
-    stat:
-      path: "{{ backups_folder }}/docker/{{ container_name }}"
-    register: container_backup
-    when: "enable_nas_stuff | default(False)"
-  - name: Restore the "{{ container_name }}" backup folder from 
-    become: yes
-    synchronize:
-      src: "{{ backups_folder }}/docker/{{ container_name }}"
-      dest: "{{ docker_dir }}/"
-      delete: true
-      # rsync_opts:
-      #   - "--exclude=.git"
-      # recursive: yes
-    delegate_to: "{{ inventory_hostname }}"
-    when: not container_data.stat.exists and container_backup.stat.exists
-
-  - name: Chmod the data folder
-    become: yes
-    file:
-      dest: "{{ docker_dir }}/{{ container_name }}"
-      state: directory
-      owner: "{{ username }}"
-      group: "{{ username }}"
-      recurse: yes
-
 - name: Install the {{ container_name }} docker-compose file
   copy:
     src: "files/docker-compose.yml"
@@ -54,3 +20,7 @@
               - "{{ docker_dir }}/{{ container_name }}/wekan-db:/data/db"
               - "{{ docker_dir }}/{{ container_name }}/wekan-db-dump:/dump"
               - "{{ docker_dir }}/{{ container_name }}/wekan-db-config:/data/configdb"
+
+- name: "Set {{ container_name }} nginx configuration"
+  include_tasks: "{{ playbook_dir }}/tasks/nginx_vhost.yml"
+  when: enable_nginx | default(False)

@@ -74,5 +74,5 @@
     append: true
 
 - name: "Set {{ container_name }} nginx configuration"
-  include_tasks: nginx_vhost.yml
+  include_tasks: "{{ playbook_dir }}/tasks/nginx_vhost.yml"
   when: enable_nginx | default(False)

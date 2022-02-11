@@ -2,3 +2,6 @@
 container_name: homer
 homer_title: "I don't know if they let cowboys in"
 homer_subtitle: "When I die, I may not go to heaven"
+
+nginx_server_name: "homer.{{ host_local }}"
+

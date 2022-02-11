@@ -29,4 +29,3 @@
     force: yes
   notify:
     - Restart nginx
-
