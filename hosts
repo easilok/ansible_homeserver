@@ -13,4 +13,4 @@ homedesktop ansible_host=192.168.1.220
 homeassistant ansible_host=192.168.1.181
 
 [homeserver]
-kinemon ansible_host=192.168.1.157 ansible_port=69 ansible_user=luis ansible_private_key_file=$HOME/.ssh/id_rsa
+kinemon ansible_host=192.168.1.154 ansible_port=69 ansible_user=luis ansible_private_key_file=$HOME/.ssh/id_rsa

@@ -1,8 +1,8 @@
 ---
 roles:
-  # - name: bertvv.samba
+  - name: bertvv.samba
   - name: geerlingguy.security
-  # - name: geerlingguy.ntp
+  - name: geerlingguy.ntp
   - name: chriswayg.msmtp-mailer
   # - name: stuvusit.smartd
   # - name: oefenweb.dns

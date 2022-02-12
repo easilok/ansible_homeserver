@@ -29,6 +29,9 @@
       tags:
         - msmtp
 
+    - role: geerlingguy.ntp
+      tags:
+        - ntp
 
     #
     # Security
@@ -165,6 +168,7 @@
     #
     # Services
     #
+
     #- role: containers/services/photoprism
     #  become: no
     #  tags:
@@ -230,11 +234,35 @@
         - containers
       when: enable_portainer | default(False)
 
-    ##
-    ## Samba
-    ##
-    #- role: bertvv.samba
-    #  become: yes
-    #  tags:
-    #    - samba
-    #  when: enable_nas_stuff | default(False)
+    - role: containers/system/prometheus
+      become: no
+      tags:
+        - containers
+        - system
+      when: enable_prometheus | default(False)
+
+    - role: containers/system/grafana
+      become: no
+      tags:
+        - containers
+        - system
+      when: enable_grafana | default(False)
+
+    #
+    # Samba
+    #
+    - role: bertvv.samba
+      become: yes
+      tags:
+        - samba
+      when: enable_samba | default(False)
+
+    #
+    # Virtualization
+    #
+    - role: virtualization
+      become: yes
+      tags:
+        - virtualization
+        - system
+      when: enable_virtualization | default(False)

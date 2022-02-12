@@ -1,0 +1,68 @@
+---
+- name: Make sure the {{ container_name }} data folder is created
+  file:
+    dest: "{{ docker_dir }}/{{ container_name }}/data"
+    state: directory
+    owner: "{{ username }}"
+    group: "docker"
+    mode: "0777"
+    recurse: yes
+
+- name: Make sure the {{ container_name }} config folder is created
+  file:
+    dest: "{{ docker_dir }}/{{ container_name }}/config"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    # mode: "0776"
+    recurse: yes
+
+- name: Instal {{ container_name }} configuration file
+  copy:
+    src: "files/prometheus.yml"
+    dest: "{{ docker_dir }}/{{ container_name }}/config/prometheus.yml"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+
+- name: Create {{ container_name }} network.
+  docker_network:
+    name: '{{ container_name }}_default'
+
+- name: Make sure the {{ container_name }} container is created and running
+  docker_container:
+    name: "{{ container_name }}"
+    image: "prom/prometheus:latest"
+    pull: yes
+    labels:
+      "flame.type": "application"
+      "flame.name": "{{ container_name | title }}"
+      "flame.url": "{{ dashboard_url }}"
+      "flame.icon": "custom"
+    state: 'started'
+    user: "1000"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "{{ docker_dir }}/{{ container_name }}/config:/etc/prometheus"
+      - "{{ docker_dir }}/{{ container_name }}/data:/prometheus"
+    restart_policy: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - "9190:9090"
+    networks:
+      - name: "{{ container_name }}_default"
+
+- include_tasks: node_exporter.yml
+- include_tasks: cadvisor.yml
+
+# - name: Add {{ container_name }} to the SWAG network (reverse-proxy)
+#   docker_network:
+#     name: swag_internal_network
+#     connected:
+#       - "{{ container_name }}"
+#     appends: yes
+#   when: enable_swag
+
+- name: "Set {{ container_name }} nginx configuration"
+  include_tasks: "{{ playbook_dir }}/tasks/nginx_vhost.yml"
+  when: enable_nginx | default(False)

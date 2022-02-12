@@ -1,0 +1,16 @@
+---
+libvirt_deps:
+  - 'qemu'
+  - 'netcat-openbsd'
+  # - 'virt-viewer'
+  - 'bridge-utils' 
+  - 'cpu-checker' 
+  - 'libvirt-clients' 
+  - 'libvirt-daemon'
+  - 'qemu-kvm'
+  - 'dnsmasq'
+  - 'dmidecode'
+  - 'ebtables'
+  - 'virtinst'
+  # - 'virt-manager'
+  - 'cockpit'

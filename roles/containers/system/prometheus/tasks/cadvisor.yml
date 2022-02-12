@@ -1,0 +1,18 @@
+---
+- name: Make sure the "cadvisor" is created and running
+  docker_container:
+    name: "cadvisor"
+    image: "gcr.io/cadvisor/cadvisor:latest"
+    pull: yes
+    state: 'started'
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ container_name }}_default"

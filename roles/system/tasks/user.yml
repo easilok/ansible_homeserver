@@ -18,19 +18,19 @@
     name: "{{ username }}"
     state: present
 
-# - name: Ensure group "sambashare" exists
-#   when: enable_samba | default(False) 
-#   group:
-#     name: "sambashare"
-#     state: present
+- name: Ensure group "sambashare" exists
+  when: enable_samba | default(False) 
+  group:
+    name: "sambashare"
+    state: present
  
-# - name: Append the samba group
-#   when: enable_samba | default(False) 
-#   user:
-#     name: "{{ username }}"
-#     groups: 
-#       - sambashare
-#     append: true
+- name: Append the samba group
+  when: enable_samba | default(False) 
+  user:
+    name: "{{ username }}"
+    groups: 
+      - sambashare
+    append: true
 
 # - name: Allow 'sudo' group to have passwordless sudo
 #   lineinfile:

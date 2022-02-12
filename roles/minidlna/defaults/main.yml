@@ -2,11 +2,11 @@ minidlna_name: "{{ inventory_hostname }}DLNA"
 minidlna_url: "http://{{ ansible_host }}:8200"
 
 minidlna_video:
-  - "/mnt/coisas/rtorrent/download"
-  - "/mnt/coisas/movies"
-  - "/mnt/coisas/series"
-  - "/mnt/coisas/share_web"
+  - "/mnt/stuff/rtorrent/download"
+  - "/mnt/stuff/movies"
+  - "/mnt/stuff/series"
+  - "/mnt/stuff/share_web"
 
 minidlna_audio:
-  - "/mnt/coisas/music"
+  - "/mnt/stuff/music"
 

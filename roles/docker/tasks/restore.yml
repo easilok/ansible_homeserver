@@ -1,6 +1,6 @@
 - name: Check if the {{ container_name }} data exists 
   stat:
-    path: "{{ docker_dir }}/b/{{ container_name }}"
+    path: "{{ docker_dir }}/{{ container_name }}"
   register: container_data
 
 - name: Check if the {{ container_name }} backup data exists 
@@ -13,7 +13,7 @@
   become: yes
   synchronize:
     src: "{{ backups_folder }}/docker/{{ container_name }}"
-    dest: "{{ docker_dir }}/b/"
+    dest: "{{ docker_dir }}/"
     delete: true
       # rsync_opts:
       #   - "--exclude=.git"
@@ -24,7 +24,7 @@
 - name: Chmod the data folder
   become: yes
   file:
-    dest: "{{ docker_dir }}/b/{{ container_name }}"
+    dest: "{{ docker_dir }}/{{ container_name }}"
     state: directory
     owner: "{{ username }}"
     group: "{{ username }}"

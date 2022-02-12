@@ -1,12 +1,12 @@
 ---
-# - name: Ubuntu specific tasks
-#   become: yes
-#   when: ansible_facts['distribution'] == 'Ubuntu'
-#   block:
-  # - name: Remove cloud-config to avoid boot delay
-  #   apt:
-  #     name: cloud-config
-  #     state: absent
+- name: Ubuntu specific tasks
+  become: yes
+  when: ansible_facts['distribution'] == 'Ubuntu'
+  block:
+  - name: Remove cloud-config to avoid boot delay
+    apt:
+      name: cloud-config
+      state: absent
 
   # - name: Make sure iSCSId and Open-iSCSId services are disabled
   #   service:

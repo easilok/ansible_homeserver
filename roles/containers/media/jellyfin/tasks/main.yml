@@ -17,10 +17,10 @@
     volumes:
       - "/etc/localtime:/etc/localtime"
       - "{{ docker_dir }}/{{ container_name }}/config:/config"
-      - "{{ docker_dir }}/{{ container_name }}/series:/data/tvshows"
-      - "{{ docker_dir }}/{{ container_name }}/movies:/data/movies"
-      - "{{ docker_dir }}/{{ container_name }}/music:/data/music"
-      - "{{ docker_dir }}/{{ container_name }}/media:/data/media"
+      - "{{ storage_drive }}/series:/data/tvshows"
+      - "{{ storage_drive }}/movies:/data/movies"
+      - "{{ storage_drive }}/music:/data/music"
+      - "{{ storage_drive }}/downloads:/data/media"
     restart_policy: unless-stopped
     ports:
       - 8096:8096

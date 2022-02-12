@@ -1,0 +1,36 @@
+---
+- name: Include OS-specific variables
+  include_vars: "{{ ansible_facts['os_family'] }}.yml"
+
+# - name: Ensure system is virtualization capable
+
+- name: Install KVM/Qemu/Libvirt stack
+  become: yes
+  package:
+    state: present
+    name: "{{ libvirt_deps }}"
+
+- name: Set virsh cli configs
+  block:
+    - name: Ensure libvirt user config exists
+      file:
+        dest: "/home/{{ username }}/.config/libvirt"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        recurse: yes
+
+    - name: Copy livirt cli command to home folder
+      become: yes
+      file:
+        src: "/etc/libvirt/libvirt.conf"
+        dest: "/home/{{ username }}/.config/libvirt/libvirt.conf"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+
+- name: Add user to livirt group
+  user:
+    name: '{{ username }}'
+    groups:
+      - libvirt
+    append: yes

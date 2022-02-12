@@ -1,0 +1,8 @@
+---
+container_name: prometheus
+
+dashboard_url: "http://prometheus.{{ host_local }}"
+
+nginx_server_name: "prometheus.{{ host_local }}"
+
+homer_category: system

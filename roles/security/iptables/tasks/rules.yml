@@ -50,6 +50,7 @@
       - "443"
     jump: ACCEPT
     comment: Ansible managed
+  when: (enable_nginx | default(False))
   # when: (enable_bunkerized_nginx | default(False)) or (enable_swag | default(False))
 
 - name: Allow Wireguard
@@ -60,6 +61,16 @@
     jump: ACCEPT
     comment: Ansible managed
   when: enable_wireguard | default(False)
+
+- name: Allow Cockpit
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: 9090
+    source: '192.168.1.0/24'
+    jump: ACCEPT
+    comment: Ansible managed
+  when: enable_virtualization | default(False)
 
 - name: Allow deluge-web
   iptables:
@@ -88,3 +99,38 @@
     comment: Ansible managed
   when: enable_minidlna | default(False)
 
+- name: Allow samba ports
+  when: enable_samba | default(False)
+  block:
+    - name: "Samba UDP 137 port"
+      iptables:
+        chain: INPUT
+        protocol: udp
+        source: '192.168.1.0/24'
+        destination_port: 137
+        jump: ACCEPT
+        comment: Ansible managed
+    - name: "Samba UDP 138 port"
+      iptables:
+        chain: INPUT
+        protocol: udp
+        source: '192.168.1.0/24'
+        destination_port: 138
+        jump: ACCEPT
+        comment: Ansible managed
+    - name: "Samba TCP 139 port"
+      iptables:
+        chain: INPUT
+        protocol: tcp
+        source: '192.168.1.0/24'
+        destination_port: 139
+        jump: ACCEPT
+        comment: Ansible managed
+    - name: "Samba TCP 445 port"
+      iptables:
+        chain: INPUT
+        protocol: tcp
+        source: '192.168.1.0/24'
+        destination_port: 445
+        jump: ACCEPT
+        comment: Ansible managed

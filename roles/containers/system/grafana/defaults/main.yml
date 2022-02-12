@@ -1,0 +1,8 @@
+---
+container_name: grafana
+
+dashboard_url: "http://grafana.{{ host_local }}"
+
+nginx_server_name: "grafana.{{ host_local }}"
+
+homer_category: system

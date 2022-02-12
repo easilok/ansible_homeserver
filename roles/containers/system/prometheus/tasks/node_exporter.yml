@@ -1,0 +1,13 @@
+---
+- name: Make sure the node exporter is created and running
+  docker_container:
+    name: "node_exporter"
+    image: "quay.io/prometheus/node-exporter:latest"
+    pull: yes
+    state: 'started'
+    pid_mode: 'host'
+    volumes:
+      - '/:/host:ro,rslave'
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ container_name }}_default"

@@ -140,6 +140,8 @@ security_autoupdate_enabled: false
 #
 enable_nas_stuff: true
 
+enable_samba: true
+
 enable_portainer: true
 
 # Home automation
@@ -206,11 +208,21 @@ enable_registry: true
 
 enable_minidlna: true
   
+enable_virtualization: false
+
 #
 # Web Server
 #
 
 enable_nginx: true
+
+#
+# System monitoring
+#
+
+enable_grafana: true
+
+enable_prometheus: true
 
 #
 # Time Machine
@@ -221,11 +233,13 @@ timemachine_drive: /dev/disk/by-label/TimeMachine
 
 enable_timemachine: false
 
-# samba_server_string: "{{ hostname }}"
+samba_server_string: "{{ hostname }}"
 
-# samba_users:
-#   - name: "{{ username }}"
-#     password: "{{ password }}"
+samba_log: "/var/log/samba.log"
+
+samba_users:
+  - name: "{{ username }}"
+    password: "{{ password }}"
 #   - name: "{{ additional_users[0].name }}"
 #     password: "{{ password2 }}"
 
@@ -233,13 +247,17 @@ enable_timemachine: false
 
 # samba_apple_extensions: yes
 
-# samba_mitigate_cve_2017_7494: false
+samba_mitigate_cve_2017_7494: false
+
+samba_load_homes: yes
+
+samba_log_level: '3 passdb:5 auth:10 winbind:2 '
 
 # samba_server_max_protocol: "SMB3"
 
-# samba_server_min_protocol: "SMB3"
+# samba_server_min_protocol: "SMB2"
 
-# samba_shares:
+samba_shares:
 #   - name: Trash
 #     guest_ok: no
 #     public: no
@@ -251,27 +269,49 @@ enable_timemachine: false
 #     valid_users: "{{ username }}"
 #     write_list: "{{ username }}"
 
-#   - name: Downloads
-#     guest_ok: no
-#     public: no
-#     read_only: no
-#     writable: yes
-#     browseable: yes
-#     owner: "{{ username }}"
-#     path: "{{ mergerfs_root }}/Downloads"
-#     valid_users: "{{ username }}, {{ additional_users[0].name }}"
-#     write_list: "{{ username }}, {{ additional_users[0].name }}"
+  - name: Downloads
+    guest_ok: no
+    public: no
+    read_only: no
+    writable: yes
+    browseable: yes
+    owner: "{{ username }}"
+    path: "{{ storage_drive }}/downloads"
+    valid_users: "{{ username }}"
+    write_list: "{{ username }}"
 
-#   - name: Media
-#     guest_ok: no
-#     public: no
-#     read_only: no
-#     writable: yes
-#     browseable: yes
-#     owner: "{{ username }}"
-#     path: "{{ mergerfs_root }}/Media"
-#     vaid_users: "{{ username }}, {{ additional_users[0].name }}"
-#     write_list: "{{ username }}, {{ additional_users[0].name }}"
+  - name: Series
+    guest_ok: no
+    public: no
+    read_only: no
+    writable: yes
+    browseable: yes
+    owner: "{{ username }}"
+    path: "{{ storage_drive }}/series"
+    vaid_users: "{{ username }}"
+    write_list: "{{ username }}"
+
+  - name: Music
+    guest_ok: no
+    public: no
+    read_only: no
+    writable: yes
+    browseable: yes
+    owner: "{{ username }}"
+    path: "{{ storage_drive }}/music"
+    vaid_users: "{{ username }}"
+    write_list: "{{ username }}"
+
+  - name: Movies
+    guest_ok: no
+    public: no
+    read_only: no
+    writable: yes
+    browseable: yes
+    owner: "{{ username }}"
+    path: "{{ storage_drive }}/movies"
+    vaid_users: "{{ username }}"
+    write_list: "{{ username }}"
 
 #   - name: TimeMachine
 #     guest_ok: no
@@ -293,28 +333,33 @@ enable_timemachine: false
 #
 # MergerFS
 #
-mergerfs_root: /mnt/coisas
+# mergerfs_root: /mnt/coisas
 
-cache_root: /mnt/storage_cache
+# cache_root: /mnt/storage_cache
 
-enable_mergerfs: false
+# enable_mergerfs: false
 
-disks:
-  - { path: /mnt/data1, src: /dev/disk/by-label/Data1, content: true }
-  - { path: /mnt/data2, src: /dev/disk/by-label/Data2, content: true }
-  - { path: /mnt/data3, src: /dev/disk/by-label/Data3, content: true }
+# disks:
+#   - { path: /mnt/data1, src: /dev/disk/by-label/Data1, content: true }
+#   - { path: /mnt/data2, src: /dev/disk/by-label/Data2, content: true }
+#   - { path: /mnt/data3, src: /dev/disk/by-label/Data3, content: true }
 
-cache_disks:
-  - { path: /mnt/cache1, src: /dev/disk/by-label/Cache1, content: true }
-  - { path: /mnt/cache2, src: /dev/disk/by-label/Cache2, content: true }
+# cache_disks:
+#   - { path: /mnt/cache1, src: /dev/disk/by-label/Cache1, content: true }
+#   - { path: /mnt/cache2, src: /dev/disk/by-label/Cache2, content: true }
 
-parity_disks:
-  - { path: /mnt/parity1, src: /dev/disk/by-label/Parity1, content: true }
+# parity_disks:
+#   - { path: /mnt/parity1, src: /dev/disk/by-label/Parity1, content: true }
 
 #
 # Backups Folder
 #
-backups_folder: /mnt/coisas
+backups_folder: /mnt/stuff
+
+#
+# Storage Drive
+#
+storage_drive: /mnt/stuff
 
 #
 # Security
@@ -329,7 +374,7 @@ enable_fail2ban: true
 security_fail2ban_enabled: true
 
 ### BEGIN Secret variables (encrypt and put into vault.yml)
-email_password: ''
+email_password: '{{ vault_email_password }} '
 host: ''
 host_local: '{{ vault_host_local }}'
 password: "{{ vault_user_password }}"

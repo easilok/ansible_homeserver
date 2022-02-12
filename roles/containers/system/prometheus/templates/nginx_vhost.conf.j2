@@ -1,0 +1,15 @@
+server {
+
+	server_name {{ nginx_server_name }};
+
+
+	location / {
+
+		proxy_pass http://localhost:9190/;
+		proxy_set_header Host $host;
+
+	}
+	access_log off;
+	error_log /var/log/nginx/error-{{ container_name }}.log error;
+
+}
