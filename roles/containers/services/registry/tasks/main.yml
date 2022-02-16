@@ -58,7 +58,7 @@
     ports:
       - "5006:80"
     networks:
-      - name: '{{ nginx_npm_docker_net }}'
+      - name: '{{ reverse_proxy_net }}'
       - name: "{{ container_name }}"
     # depends_on:
     #   - 'registry'

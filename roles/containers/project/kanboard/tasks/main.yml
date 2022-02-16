@@ -29,7 +29,7 @@
       - 8083:80
       - 4443:443 
     networks:
-      - name: '{{ nginx_npm_docker_net }}'
+      - name: '{{ reverse_proxy_net }}'
       - name: "{{ container_name }}_default"
 
 - name: Make sure the {{ container_name }} database container is created and running

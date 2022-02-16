@@ -9,6 +9,9 @@
       "flame.name": "{{ container_name | title }}"
       "flame.url": "{{ dashboard_url }}"
       "flame.icon": "custom"
+      "traefik.enable":	"true"
+      "traefik.http.routers.sonarr.rule":	"Host(`{{ nginx_server_name }}`)"
+      # "traefik.http.services.sonarr.loadbalancer.server.port": "8096"
     state: 'started'
     env:
       "PUID": "{{ guid }}"
@@ -23,7 +26,7 @@
     ports:
       - 8989:8989
     networks:
-      - name: '{{ nginx_npm_docker_net }}'
+      - name: '{{ reverse_proxy_net }}'
 
 # - name: Add {{ container_name }} to the SWAG network (reverse-proxy)
 #   docker_network:

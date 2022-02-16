@@ -128,7 +128,9 @@ enable_nginx: false
 
 enable_nginx_npm: false
 
-nginx_npm_docker_net: reverse_proxy_net
+enable_traefik: true
+
+reverse_proxy_net: reverse_proxy_net
 
 #
 # System monitoring
@@ -240,7 +242,7 @@ security_fail2ban_enabled: false
 ### BEGIN Secret variables (encrypt and put into vault.yml)
 email_password: '{{ vault_email_password }} '
 host: ''
-host_local: '{{ vault_host_local }}'
+host_local: 'test'
 password: "{{ vault_user_password }}"
 photoprism_password: ''
 pihole_password: ''

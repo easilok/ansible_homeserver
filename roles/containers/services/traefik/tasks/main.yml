@@ -1,0 +1,54 @@
+---
+- name: Make sure nginx service is stopped and disabled
+  become: yes
+  when: "'nginx' in services"
+  service:
+    name: nginx
+    state: stopped
+    enabled: no
+
+- name: Setup {{ container_name }} config files
+  block:
+    - name: Make sure {{ container_name }} docker folder and config exists
+      file:
+        dest: "{{ docker_dir }}/{{ container_name }}/config"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        recurse: yes
+    - name: Install {{ container_name }} configuration file
+      template:
+        src: "traefik.yml.j2"
+        dest: "{{ docker_dir }}/{{ container_name }}/config/traefik.yml"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+
+- name: Make sure the {{ container_name }} container is created and running
+  docker_container:
+    name: "{{ container_name }}"
+    image: "traefik:v2.5"
+    pull: yes
+    state: 'started'
+    env:
+      "TZ": "{{ timezone }}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "{{ docker_dir }}/{{ container_name }}/config:/etc/traefik"
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart_policy: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      # (Optional) Expose Dashboard
+      - "8081:8080"  # Don't do this in production!:
+    networks:
+      - name: '{{ reverse_proxy_net }}'
+
+# - name: Add {{ container_name }} to the SWAG network (reverse-proxy)
+#   docker_network:
+#     name: swag_internal_network
+#     connected:
+#       - "{{ container_name }}"
+#     appends: yes
+#   when: enable_swag
+

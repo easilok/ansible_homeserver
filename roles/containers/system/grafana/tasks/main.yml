@@ -28,7 +28,7 @@
       - 9300:3000
     networks:
       - name: 'prometheus_default'
-      - name: '{{ nginx_npm_docker_net }}'
+      - name: '{{ reverse_proxy_net }}'
 
 # - name: Add {{ container_name }} to the SWAG network (reverse-proxy)
 #   docker_network:

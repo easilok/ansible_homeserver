@@ -225,7 +225,9 @@ enable_nginx: false
 
 enable_nginx_npm: true
 
-nginx_npm_docker_net: reverse_proxy_net
+enable_traefik: false
+
+reverse_proxy_net: reverse_proxy_net
 
 #
 # System monitoring

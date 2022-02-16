@@ -201,6 +201,12 @@
         - services
       when: enable_nginx_npm | default(False)
 
+    - role: containers/services/traefik
+      become: no
+      tags: 
+        - containers
+        - services
+      when: enable_traefik | default(False)
 
     ## - role: containers/services/nextcloud
     ##   become: no

@@ -1,0 +1,6 @@
+---
+container_name: traefik
+
+dashboard_url: "http://traefik.{{ host_local }}"
+
+homer_category: services

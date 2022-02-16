@@ -1,3 +1,7 @@
 ---
 
 container_name: portainer
+
+dashboard_url: "http://portainer.{{ host_local }}"
+
+nginx_server_name: "portainer.{{ host_local }}"

@@ -9,10 +9,13 @@
       "flame.name": "{{ container_name | title }}"
       "flame.url": "{{ dashboard_url }}"
       "flame.icon": "custom"
+      "traefik.enable":	"true"
+      "traefik.http.routers.jellyfin.rule":	"Host(`{{ nginx_server_name }}`)"
+      "traefik.http.services.jellyfin.loadbalancer.server.port": "8096"
     state: 'started'
     env:
-      # "PUID": "{{ guid }}"
-      # "PGID": "{{ guid }}"
+      "PUID": "{{ guid }}"
+      "PGID": "{{ guid }}"
       "TZ": "{{ timezone }}"
     volumes:
       - "/etc/localtime:/etc/localtime"
@@ -28,7 +31,7 @@
       - 7359:7359/udp #optional
       # - 1900:1900/udp #optional - DLNA not working, using minidlna
     networks:
-      - name: '{{ nginx_npm_docker_net }}'
+      - name: '{{ reverse_proxy_net }}'
 
 - name: "Set {{ container_name }} nginx configuration"
   include_tasks: "{{ playbook_dir }}/tasks/nginx_vhost.yml"

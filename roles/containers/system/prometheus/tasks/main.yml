@@ -51,7 +51,7 @@
       - "9190:9090"
     networks:
       - name: "{{ container_name }}_default"
-      - name: '{{ nginx_npm_docker_net }}'
+      - name: '{{ reverse_proxy_net }}'
 
 - include_tasks: node_exporter.yml
 - include_tasks: cadvisor.yml

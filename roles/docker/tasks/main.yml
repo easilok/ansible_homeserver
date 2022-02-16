@@ -152,7 +152,7 @@
 
 - name: Create reverse proxy network.
   docker_network:
-    name: '{{ nginx_npm_docker_net }}'
+    name: '{{ reverse_proxy_net }}'
 
 # - name: Stop and remove all the disabled containers
 #   become: no
