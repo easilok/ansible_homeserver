@@ -20,6 +20,8 @@
               - "{{ docker_dir }}/{{ container_name }}/wekan-db:/data/db"
               - "{{ docker_dir }}/{{ container_name }}/wekan-db-dump:/dump"
               - "{{ docker_dir }}/{{ container_name }}/wekan-db-config:/data/configdb"
+            networks:
+              - name: '{{ nginx_npm_docker_net }}'
 
 - name: "Set {{ container_name }} nginx configuration"
   include_tasks: "{{ playbook_dir }}/tasks/nginx_vhost.yml"

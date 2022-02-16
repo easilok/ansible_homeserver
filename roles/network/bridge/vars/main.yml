@@ -1,2 +1,2 @@
 ---
-main_ethernet_interface: enp1s0
+main_ethernet_interface: eno1

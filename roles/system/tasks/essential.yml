@@ -7,6 +7,10 @@
     apt:
       name: cloud-config
       state: absent
+  - name: Make sure the locale package is installed (Debian and Ubuntu)
+    apt:
+      name: locales
+      state: present
 
   # - name: Make sure iSCSId and Open-iSCSId services are disabled
   #   service:

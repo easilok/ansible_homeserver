@@ -31,6 +31,15 @@
     jump: ACCEPT
     comment: Ansible managed
 
+- name: Allow current port 22 ssh connection
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: 22
+    ctstate: NEW,ESTABLISHED
+    jump: ACCEPT
+  when: not enable_endlessh and ansible_ssh_port == "22"
+
 - name: Allow endlessh
   iptables:
     chain: INPUT
@@ -77,6 +86,24 @@
     chain: INPUT
     protocol: tcp
     destination_port: 8112
+    jump: ACCEPT
+    comment: Ansible managed
+  when: enable_deluge | default(False)
+
+- name: Allow deluge remote connections
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: 58846
+    jump: ACCEPT
+    comment: Ansible managed
+  when: enable_deluge | default(False)
+
+- name: Allow deluge incoming port
+  iptables:
+    chain: INPUT
+    protocol: udp
+    destination_port: "{{ torrent_listen_port }}"
     jump: ACCEPT
     comment: Ansible managed
   when: enable_deluge | default(False)

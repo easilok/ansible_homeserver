@@ -48,6 +48,20 @@
   # notify:
   #   - Restard deluge
 
+- name: Check deluge configuration directory
+  stat:
+    path: "/var/lib/deluged/.config/deluge"
+  register: deluge_config_directory
+
+- name: Install deluge default configuration
+  template:
+    src: "deluge.core.conf.j2"
+    dest: /var/lib/deluged/.config/deluge/core.conf
+    mode: 0664
+    owner: "{{ deluge_user }}"
+    group: "{{ deluge_group }}"
+  when: deluge_config_directory.stat.exists 
+
 - name: Make sure the deluged package systemd service is disabled and stopped
   service:
     name: deluged
@@ -72,6 +86,16 @@
     groups: 
       - "{{ deluge_group }}"
     append: true
+
+- name: Add deluge download folders to group
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    owner: "{{ deluge_user }}"
+    group: "{{ deluge_group }}"
+    mode: '0777'
+  with_items: "{{ download_directories }}"
 
 - name: "Set {{ container_name }} nginx configuration"
   include_tasks: "{{ playbook_dir }}/tasks/nginx_vhost.yml"

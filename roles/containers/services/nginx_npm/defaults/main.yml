@@ -1,0 +1,7 @@
+---
+container_name: nginx-proxy-manager
+
+dashboard_url: "http://npm.{{ host_local }}"
+# dashboard_url: "https://docker.luispereira.xyz"
+
+homer_category: services

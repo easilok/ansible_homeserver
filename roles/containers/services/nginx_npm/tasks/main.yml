@@ -1,0 +1,37 @@
+---
+- name: Make sure nginx service is stopped and disabled
+  become: yes
+  when: "'nginx' in services"
+  service:
+    name: nginx
+    state: stopped
+    enabled: no
+
+- name: Make sure the {{ container_name }} container is created and running
+  docker_container:
+    name: "{{ container_name }}"
+    image: "jc21/nginx-proxy-manager:latest"
+    pull: yes
+    state: 'started'
+    env:
+      "TZ": "{{ timezone }}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "{{ docker_dir }}/{{ container_name }}/data:/data"
+      - "{{ docker_dir }}/{{ container_name }}/letsencrypt:/etc/letsencrypt"
+    restart_policy: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    networks:
+      - name: '{{ nginx_npm_docker_net }}'
+
+# - name: Add {{ container_name }} to the SWAG network (reverse-proxy)
+#   docker_network:
+#     name: swag_internal_network
+#     connected:
+#       - "{{ container_name }}"
+#     appends: yes
+#   when: enable_swag
+

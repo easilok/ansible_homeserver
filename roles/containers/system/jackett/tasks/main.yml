@@ -23,6 +23,8 @@
     restart_policy: unless-stopped
     ports:
       - 9117:9117
+    networks:
+      - name: '{{ nginx_npm_docker_net }}'
 
 # - name: Add {{ container_name }} to the SWAG network (reverse-proxy)
 #   docker_network:

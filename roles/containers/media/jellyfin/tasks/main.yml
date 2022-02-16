@@ -11,8 +11,8 @@
       "flame.icon": "custom"
     state: 'started'
     env:
-      "PUID": "{{ guid }}"
-      "PGID": "{{ guid }}"
+      # "PUID": "{{ guid }}"
+      # "PGID": "{{ guid }}"
       "TZ": "{{ timezone }}"
     volumes:
       - "/etc/localtime:/etc/localtime"
@@ -27,6 +27,8 @@
       - 8920:8920 #optional
       - 7359:7359/udp #optional
       # - 1900:1900/udp #optional - DLNA not working, using minidlna
+    networks:
+      - name: '{{ nginx_npm_docker_net }}'
 
 - name: "Set {{ container_name }} nginx configuration"
   include_tasks: "{{ playbook_dir }}/tasks/nginx_vhost.yml"

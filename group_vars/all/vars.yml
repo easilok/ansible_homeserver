@@ -69,12 +69,12 @@ extra_packages:
   - rsync
   - lm-sensors
   - iotop
+  - iftop
   - ncdu
   - hddtemp
   - reptyr
   - vnstat
   - iptables-persistent
-
 
 #
 # Docker-compose url
@@ -109,13 +109,17 @@ msmtp_accounts:
   host:      "{{ email_smtp_host }}"
   port:      "{{ email_smtp_port_ssl }}"
   auth:      "on"
-  from:      "{{ email }}"
+  from:      "{{ hostname }}@{{ email.split('@')[1] }}"
   user:      "{{ email }}"
   password:  "{{ email_password }}"
 
 msmtp_default_account: "mailbox"
 
 msmtp_alias_default : "{{ email }}"
+
+msmtp_tls_starttls: 'off'
+
+msmtp_domain: "{{ email.split('@')[1] }}"
 
 #
 # SSH (geerlingguy.security)
@@ -125,10 +129,12 @@ security_ssh_port: 69
 
 # security_sudoers_passwordless: [ "{{ username }}" ]
 
-security_autoupdate_enabled: false
-# security_autoupdate_reboot: "true"
-# security_autoupdate_mail_to: "{{ email }}"
-# security_autoupdate_mail_on_error: true
+security_autoupdate_enabled: true
+security_autoupdate_reboot: true
+security_autoupdate_mail_to: "{{ email }}"
+security_autoupdate_mail_on_error: true
+security_autoupdate_reboot_time: "01:00"
+
 #
 # security_ssh_permit_empty_password: "no"
 # security_ssh_x11_forwarding: "no"
@@ -165,6 +171,7 @@ enable_photoprism: false
 # Yo-ho-ho
 
 enable_deluge: true
+torrent_listen_port: 50746
 
 enable_sonarr: true
 
@@ -214,7 +221,11 @@ enable_virtualization: false
 # Web Server
 #
 
-enable_nginx: true
+enable_nginx: false
+
+enable_nginx_npm: true
+
+nginx_npm_docker_net: reverse_proxy_net
 
 #
 # System monitoring
@@ -275,7 +286,9 @@ samba_shares:
     read_only: no
     writable: yes
     browseable: yes
-    owner: "{{ username }}"
+    owner: "{{ deluge_user }}"
+    group: "{{ deluge_group }}"
+    # directory_mode: '0777'
     path: "{{ storage_drive }}/downloads"
     valid_users: "{{ username }}"
     write_list: "{{ username }}"
@@ -286,7 +299,9 @@ samba_shares:
     read_only: no
     writable: yes
     browseable: yes
-    owner: "{{ username }}"
+    owner: "{{ deluge_user }}"
+    group: "{{ deluge_group }}"
+    # directory_mode: '0777'
     path: "{{ storage_drive }}/series"
     vaid_users: "{{ username }}"
     write_list: "{{ username }}"
@@ -297,7 +312,9 @@ samba_shares:
     read_only: no
     writable: yes
     browseable: yes
-    owner: "{{ username }}"
+    owner: "{{ deluge_user }}"
+    group: "{{ deluge_group }}"
+    # directory_mode: '0777'
     path: "{{ storage_drive }}/music"
     vaid_users: "{{ username }}"
     write_list: "{{ username }}"
@@ -308,8 +325,21 @@ samba_shares:
     read_only: no
     writable: yes
     browseable: yes
-    owner: "{{ username }}"
+    owner: "{{ deluge_user }}"
+    group: "{{ deluge_group }}"
+    # directory_mode: '0777'
     path: "{{ storage_drive }}/movies"
+    vaid_users: "{{ username }}"
+    write_list: "{{ username }}"
+
+  - name: Backups
+    guest_ok: no
+    public: no
+    read_only: no
+    writable: yes
+    browseable: yes
+    # owner: "{{ username }}"
+    path: "{{ backups_folder }}"
     vaid_users: "{{ username }}"
     write_list: "{{ username }}"
 
@@ -354,7 +384,7 @@ samba_shares:
 #
 # Backups Folder
 #
-backups_folder: /mnt/stuff
+backups_folder: /mnt/backups
 
 #
 # Storage Drive

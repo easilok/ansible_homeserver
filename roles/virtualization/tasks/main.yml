@@ -22,7 +22,7 @@
 
     - name: Copy livirt cli command to home folder
       become: yes
-      file:
+      copy:
         src: "/etc/libvirt/libvirt.conf"
         dest: "/home/{{ username }}/.config/libvirt/libvirt.conf"
         owner: "{{ username }}"
@@ -33,4 +33,11 @@
     name: '{{ username }}'
     groups:
       - libvirt
+    append: yes
+
+- name: Add user to kvm group
+  user:
+    name: '{{ username }}'
+    groups:
+      - kvm
     append: yes

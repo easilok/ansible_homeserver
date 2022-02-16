@@ -29,6 +29,7 @@
       - 8083:80
       - 4443:443 
     networks:
+      - name: '{{ nginx_npm_docker_net }}'
       - name: "{{ container_name }}_default"
 
 - name: Make sure the {{ container_name }} database container is created and running
@@ -36,6 +37,7 @@
     name: "{{ container_name }}-db"
     image: mariadb:latest
     pull: yes
+    state: 'started'
     command: "--default-authentication-plugin=mysql_native_password"
     env:
       "MYSQL_ROOT_PASSWORD": "{{ db_container_root_password }}"

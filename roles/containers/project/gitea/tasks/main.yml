@@ -1,12 +1,12 @@
 ---
 - name: Create {{ container_name }} network.
   docker_network:
-    name: '{{ container_name }}'
+    name: '{{ container_name }}_net'
 
 - name: Make sure the {{ container_name }} container is created and running
   docker_container:
     name: "{{ container_name }}"
-    image: "gitea/gitea:1.15.4"
+    image: "gitea/gitea:1.16.0"
     pull: yes
     labels:
       "flame.type": "application"
@@ -23,10 +23,11 @@
       - "{{ docker_dir }}/{{ container_name }}/volume:/data"
     restart_policy: unless-stopped
     ports:
-      - "8300:3000"
-      - "8222:22"
+      - 8300:3000
+      - '8222:22'
     networks:
-      - name: "{{ container_name }}"
+      - name: "{{ container_name }}_net"
+      - name: '{{ nginx_npm_docker_net }}'
 
 # - name: Add {{ container_name }} to the SWAG network (reverse-proxy)
 #   docker_network:

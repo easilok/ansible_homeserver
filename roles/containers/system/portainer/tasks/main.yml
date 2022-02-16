@@ -16,3 +16,5 @@
       - 9000:9000
       - 9443:9443
     restart_policy: unless-stopped
+    networks:
+      - name: '{{ nginx_npm_docker_net }}'

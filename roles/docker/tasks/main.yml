@@ -150,6 +150,10 @@
   when: "(enable_nas_stuff | default(False)) and lookup('vars', 'enable_' + item.path.split('/')[-1])"
   with_items: "{{ containers.files }}"
 
+- name: Create reverse proxy network.
+  docker_network:
+    name: '{{ nginx_npm_docker_net }}'
+
 # - name: Stop and remove all the disabled containers
 #   become: no
 #   docker_container:

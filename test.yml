@@ -3,14 +3,24 @@
 # Tasks and roles for all hosts
 #
 # - hosts: kinemon
-#   gather_facts: no
+  # gather_facts: no
 
 #   pre_tasks:
 #     - import_tasks: tasks/ssh_juggle_port.yml
 #       tags:
 #         - port
 
-- hosts: whitebeard
+- hosts: kinemon
+  gather_facts: no
+  pre_tasks:
+    - include_vars:
+        dir: group_vars/kinemon
+        depth: 1
+    - import_tasks: tasks/ssh_juggle_port.yml
+      tags:
+        - port
+
+- hosts: kinemon
   become: yes
   roles:
 
@@ -60,6 +70,7 @@
     - role: geerlingguy.security
       tags:
         - security
+    # notify: "Restart sshd"
 
     #
     # Network

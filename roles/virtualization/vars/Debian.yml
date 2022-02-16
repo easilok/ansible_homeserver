@@ -13,4 +13,5 @@ libvirt_deps:
   - 'ebtables'
   - 'virtinst'
   # - 'virt-manager'
+  - libvirt-daemon-system
   - 'cockpit'

@@ -6,3 +6,12 @@ dashboard_url: "http://deluge.{{ host_local }}"
 nginx_server_name: "deluge.{{ host_local }}"
 
 homer_category: system
+
+download_directories:
+  - /mnt/stuff/series
+  - /mnt/stuff/movies
+  - /mnt/stuff/music
+  - /mnt/stuff/downloads
+
+torrent_download_dir: /mnt/stuff/series
+
