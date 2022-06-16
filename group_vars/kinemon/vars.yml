@@ -23,13 +23,6 @@ extra_packages:
 #
 docker_compose_url: "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64"
 
-#
-# Apt mirrors
-#
-# version: focal
-
-# apt_mirror: http://ftp.uni-mainz.de/ubuntu/
-
 
 #
 # Email credentials (for SMART and Snapraid error reporting)
@@ -110,7 +103,7 @@ enable_authelia: false
 
 enable_pihole: false
 
-enable_watchtower: false
+enable_watchtower: true
 
 enable_endlessh: false
 
@@ -196,26 +189,6 @@ samba_log_level: '3 passdb:5 auth:10 winbind:2 '
   #   valid_users: "{{ username }}"
   #   write_list: "{{ username }}"
 
-#
-# MergerFS
-#
-# mergerfs_root: /mnt/coisas
-
-# cache_root: /mnt/storage_cache
-
-# enable_mergerfs: false
-
-# disks:
-#   - { path: /mnt/data1, src: /dev/disk/by-label/Data1, content: true }
-#   - { path: /mnt/data2, src: /dev/disk/by-label/Data2, content: true }
-#   - { path: /mnt/data3, src: /dev/disk/by-label/Data3, content: true }
-
-# cache_disks:
-#   - { path: /mnt/cache1, src: /dev/disk/by-label/Cache1, content: true }
-#   - { path: /mnt/cache2, src: /dev/disk/by-label/Cache2, content: true }
-
-# parity_disks:
-#   - { path: /mnt/parity1, src: /dev/disk/by-label/Parity1, content: true }
 
 #
 # Backups Folder

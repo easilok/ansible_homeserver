@@ -1,8 +1,8 @@
 ---
 container_name: docker-registry
 
-dashboard_url: "http://registry.{{ host_local }}"
-# dashboard_url: "https://docker.luispereira.xyz"
+# dashboard_url: "http://registry.{{ host_local }}"
+dashboard_url: "https://docker.luispereira.xyz"
 
 nginx_server_name: "registry.{{ host_local }}"
 

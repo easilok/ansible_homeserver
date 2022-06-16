@@ -126,12 +126,13 @@
     ##     - containers
     ##   when: enable_authelia | default(False)
 
-    ## Auto updated containers
-    ## - role: containers/system/watchtower
-    ##   become: no
-    ##   tags:
-    ##     - watchtower
-    ##     - containers
+    # Auto updated containers
+    - role: containers/system/watchtower
+      become: no
+      tags:
+        - watchtower
+        - containers
+      when: enable_watchtower | default(False)
 
     #
     # Media

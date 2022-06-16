@@ -1,0 +1,7 @@
+---
+
+container_name: watchtower
+
+dashboard_url: "http://watchtower.{{ host_local }}"
+
+nginx_server_name: "watchtower.{{ host_local }}"

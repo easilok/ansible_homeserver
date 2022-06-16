@@ -1,0 +1,32 @@
+---
+
+- name: Make sure the {{ container_name }} container is created and running
+  docker_container:
+    name: "{{ container_name }}"
+    image: "containrrr/watchtower"
+    pull: true
+    state: 'started'
+    labels:
+      "traefik.enable":	"true"
+      "traefik.http.routers.portainer.rule":	"Host(`{{ nginx_server_name }}`)"
+    env:
+      TZ: "{{ timezone }}"
+      # WATCHTOWER_POLL_INTERVAL: 86400 (24 hours) # default 24h
+      # WATCHTOWER_MONITOR_ONLY: True # Monitor for updates without updating but notification
+      WATCHTOWER_NOTIFICATIONS: "email"
+      WATCHTOWER_NOTIFICATION_EMAIL_FROM: "{{ hostname }}@{{ email.split('@')[1] }}"
+      WATCHTOWER_NOTIFICATION_EMAIL_TO: "{{ email }}"
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER: "{{ email_smtp_host }}"
+      # WATCHTOWER_NOTIFICATION_EMAIL_SERVER_TLS_SKIP_VERIFY: "true"
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT: "{{ email_smtp_port_ssl }}"
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER: "{{ email }}"
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD: "{{ email_password }}"
+      # WATCHTOWER_NOTIFICATION_EMAIL_DELAY: "10" # in seconds
+      WATCHTOWER_NOTIFICATION_EMAIL_SUBJECTTAG: "{{ hostname }} Watchtower"
+    volumes: 
+      # - "{{ docker_dir }}/{{ container_name }}/config/config.json:/config.json"
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart_policy: unless-stopped
+    networks:
+      - name: '{{ reverse_proxy_net }}'

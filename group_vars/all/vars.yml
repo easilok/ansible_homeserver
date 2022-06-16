@@ -11,23 +11,9 @@ hostname: "{{ inventory_hostname }}"
 
 timezone: Europe/Lisbon
 
-# dot_nameservers: [185.95.218.42@853#dns.digitale-gesellschaft.ch, 94.140.15.140@853#dns-unfiltered.adguard.com]
-
 ntp_timezone: "{{ timezone }}"
 
 locale: en_US.UTF-8
-
-# lan_network: "192.168.2.0/24"
-
-# vpn_network: "10.1.1.0/24"
-
-# lan_gateway: "192.168.2.1"
-
-# dmz_network: "192.168.44.0/24"
-
-# dmz_gateway: "192.168.44.1"
-
-# dns_nameservers: ["1.1.1.1", "1.0.0.1"]
 
 keyboard_layout: us
 
@@ -48,13 +34,6 @@ enable_pikvm: false
 pikvm_address: pikvm.box
 
 spindown_time: 600 # in seconds
-
-# colorscheme: nord
-
-# subdomains: {
-#       'nextcloud': 'nextcloud',
-#       'vaultwarden': 'vaultwarden',
-# }
 
 #
 # Packages
@@ -132,7 +111,8 @@ security_ssh_port: 69
 security_autoupdate_enabled: true
 security_autoupdate_reboot: true
 security_autoupdate_mail_to: "{{ email }}"
-security_autoupdate_mail_on_error: true
+# Set this to false to get email after every package install
+security_autoupdate_mail_on_error: true 
 security_autoupdate_reboot_time: "01:00"
 
 #
@@ -167,6 +147,8 @@ enable_gitea: true
 enable_jellyfin: true
 
 enable_photoprism: false
+
+enable_filebrowser: false
 
 # Yo-ho-ho
 
@@ -207,7 +189,7 @@ enable_authelia: false
 
 enable_pihole: false
 
-enable_watchtower: false
+enable_watchtower: true
 
 enable_endlessh: false
 
@@ -236,6 +218,8 @@ reverse_proxy_net: reverse_proxy_net
 enable_grafana: true
 
 enable_prometheus: true
+
+enable_systemd_manager: true
 
 #
 # Time Machine
@@ -361,27 +345,6 @@ samba_shares:
 #     path: "{{ timemachine_root }}"
 #     valid_users: "{{ username }}"
 #     write_list: "{{ username }}"
-
-#
-# MergerFS
-#
-# mergerfs_root: /mnt/coisas
-
-# cache_root: /mnt/storage_cache
-
-# enable_mergerfs: false
-
-# disks:
-#   - { path: /mnt/data1, src: /dev/disk/by-label/Data1, content: true }
-#   - { path: /mnt/data2, src: /dev/disk/by-label/Data2, content: true }
-#   - { path: /mnt/data3, src: /dev/disk/by-label/Data3, content: true }
-
-# cache_disks:
-#   - { path: /mnt/cache1, src: /dev/disk/by-label/Cache1, content: true }
-#   - { path: /mnt/cache2, src: /dev/disk/by-label/Cache2, content: true }
-
-# parity_disks:
-#   - { path: /mnt/parity1, src: /dev/disk/by-label/Parity1, content: true }
 
 #
 # Backups Folder

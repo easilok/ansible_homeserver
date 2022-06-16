@@ -1,0 +1,8 @@
+---
+container_name: filebrowser
+
+dashboard_url: "http://files.{{ host_local }}"
+
+nginx_server_name: "files.{{ host_local }}"
+
+homer_category: media
