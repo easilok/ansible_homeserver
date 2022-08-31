@@ -39,6 +39,7 @@
       "flame.url": "{{ dashboard_url }}"
       "flame.icon": "custom"
     state: 'started'
+    restart: yes
     user: "1000"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

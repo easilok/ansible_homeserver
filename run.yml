@@ -254,6 +254,7 @@
       become: no
       tags:
         - containers
+        - portainer
       when: enable_portainer | default(False)
 
     - role: containers/system/prometheus
@@ -261,6 +262,7 @@
       tags:
         - containers
         - system
+        - prometheus
       when: enable_prometheus | default(False)
 
     - role: containers/system/grafana
@@ -268,6 +270,7 @@
       tags:
         - containers
         - system
+        - grafana
       when: enable_grafana | default(False)
 
     #

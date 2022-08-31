@@ -17,11 +17,27 @@ scrape_configs:
       - targets: ['localhost:9190']
 
   # Example job for node_exporter
-  - job_name: 'node_exporter'
+  - job_name: 'node_exporter_homeserver'
     static_configs:
       - targets: ['node_exporter:9100']
 
   # Example job for cadvisor
-  - job_name: 'cadvisor'
+  - job_name: 'cadvisor_homeserver'
     static_configs:
       - targets: ['cadvisor:8080']
+
+  - job_name: 'node_exporter_tesla'
+    static_configs:
+      - targets: ['192.168.1.240:9100']
+
+  - job_name: 'node_exporter_pihole'
+    static_configs:
+      - targets: ['192.168.1.230:9100']
+
+  - job_name: 'node_exporter_ovh_web'
+    static_configs:
+      - targets: ['cloud.luispereira.xyz:47200']
+
+  - job_name: 'cadvisor_ovh_web'
+    static_configs:
+      - targets: ['cloud.luispereira.xyz:47300']
