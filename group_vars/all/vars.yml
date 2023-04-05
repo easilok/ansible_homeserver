@@ -136,15 +136,15 @@ enable_homeassistant: false
 
 # Projects
 
-enable_kanboard: true
+enable_kanboard: false
 
 enable_wekan: false
 
-enable_gitea: true
+enable_gitea: false
 
 # Media
 
-enable_jellyfin: true
+enable_jellyfin: false
 
 enable_photoprism: false
 
@@ -197,7 +197,7 @@ enable_registry: true
 
 enable_minidlna: true
   
-enable_virtualization: false
+enable_virtualization: true
 
 #
 # Web Server
